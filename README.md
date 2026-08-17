@@ -17,7 +17,7 @@
   <img src="https://img.shields.io/badge/Streamlit-1.32-FF4B4B?logo=streamlit&logoColor=white" alt="Streamlit">
   <img src="https://img.shields.io/badge/LLM-Groq-F55036" alt="Groq">
   <img src="https://img.shields.io/badge/tests-1132%20passing-2EA043" alt="1132 tests passing">
-  <img src="https://img.shields.io/badge/license-not%20specified-lightgrey" alt="MIT">
+  <img src="https://img.shields.io/badge/license-MIT-750014" alt="MIT">
 </p>
 
 ---
@@ -307,7 +307,9 @@ graph TB
     PIPE --> AGENT --> Services
     RAG --> KB
     LLM --> GROQ
-    Services --> COMMS
+    SCH --> COMMS
+    PHARM --> COMMS
+    RADS --> COMMS
 ```
 
 Three properties are load-bearing:
@@ -765,7 +767,9 @@ graph TB
     DU --> API
     FU --> API
     API --> AUTH --> Domain --> DB
-    Domain --> S5
+    S1 --> S5
+    S2 --> S5
+    S3 --> S5
     API --> RAGS
     API --> AGENTS
     AGENTS --> Domain
@@ -1138,9 +1142,12 @@ Future work. None of the following is implemented today.
 
 ## License
 
-No license file is present in this repository. Without one, default copyright
-applies and no permissions are granted for reuse. Add a `LICENSE` file before
-publishing if you intend the project to be used by others.
+Roshada is released under the **MIT License**. You are free to use, copy,
+modify, merge, publish, distribute, sublicense and sell copies of the software,
+provided the copyright notice and permission notice are included. The software
+is provided "as is", without warranty of any kind.
+
+See [LICENSE](LICENSE) for the full text.
 
 ---
 
