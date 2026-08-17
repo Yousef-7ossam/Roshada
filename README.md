@@ -17,7 +17,7 @@
   <img src="https://img.shields.io/badge/Streamlit-1.32-FF4B4B?logo=streamlit&logoColor=white" alt="Streamlit">
   <img src="https://img.shields.io/badge/LLM-Groq-F55036" alt="Groq">
   <img src="https://img.shields.io/badge/tests-1132%20passing-2EA043" alt="1132 tests passing">
-  <img src="https://img.shields.io/badge/license-MIT-750014" alt="MIT">
+  <img src="https://img.shields.io/badge/license-Non--Commercial-8A2BE2" alt="Non-Commercial License">
 </p>
 
 ---
@@ -298,13 +298,24 @@ graph TB
         LLM[LLM provider facade]
     end
 
-    DB[(PostgreSQL)]
+    DB[PostgreSQL]
     GROQ[Groq API]
 
-    U --> UI --> API --> AUTH --> Services --> DB
+    U --> UI --> API --> AUTH
+    AUTH --> SCH
+    AUTH --> PHARM
+    AUTH --> RADS
+    AUTH --> RECS
+    SCH --> DB
+    PHARM --> DB
+    RADS --> DB
+    RECS --> DB
+    KB --> DB
     API --> PIPE
     PIPE --> GRND --> RAG --> LLM
-    PIPE --> AGENT --> Services
+    PIPE --> AGENT
+    AGENT --> SCH
+    AGENT --> PHARM
     RAG --> KB
     LLM --> GROQ
     SCH --> COMMS
@@ -477,7 +488,7 @@ graph TD
     EV["Domain event: booking, prescription, report release, request status"]
     EV --> HOOK[Callback registry in the domain module]
     HOOK --> SVC[Notification service]
-    SVC --> ROW[(Notification row in PostgreSQL)]
+    SVC --> ROW[Notification row in PostgreSQL]
     ROW --> INAPP[In-app notification centre]
     SVC -.no backend registered.-> EMAIL[Email]
     SVC -.no backend registered.-> PUSH[Push]
@@ -526,7 +537,7 @@ graph TD
     ROUTE -->|no| AG[Tool-calling agent]
     AG --> TOOLS[Role-scoped tools]
     TOOLS --> SERVICES[Domain services, as the authenticated user]
-    SERVICES --> DB[(PostgreSQL)]
+    SERVICES --> DB[PostgreSQL]
     RAG --> LLMF[LLM provider facade]
     AG --> LLMF
     LLMF --> PROV[Groq / OpenAI-compatible / Gemini / mock]
@@ -554,7 +565,7 @@ graph TD
     DOC --> PARSE[Parse and clean]
     PARSE --> CHUNK[Chunk with overlap]
     CHUNK --> EMB[Embedding]
-    EMB --> STORE[(Chunk + embedding in PostgreSQL)]
+    EMB --> STORE[Chunk and embedding in PostgreSQL]
 
     Q[Question] --> PROC[Query processing and language detection]
     PROC --> GATE["Retrieval gate: approved source, processed document, active version"]
@@ -692,7 +703,6 @@ erDiagram
 
     KNOWLEDGESOURCE ||--o{ DOCUMENT : publishes
     DOCUMENT ||--|{ DOCUMENTCHUNK : "chunked into"
-    DOCUMENT ||--o| DOCUMENT : supersedes
 ```
 
 The relationships that matter most:
@@ -722,8 +732,8 @@ graph TD
     ROLE --> CAP{Capability check}
     CAP -->|allowed| SVC[Domain service]
     CAP -->|refused| DENY[403]
-    SVC --> SCOPE[Scoped to the caller's own data]
-    SCOPE --> DB[(PostgreSQL)]
+    SVC --> SCOPE["Scoped to the caller's own data"]
+    SCOPE --> DB[PostgreSQL]
 ```
 
 Six roles: **patient, doctor, laboratory, radiology, pharmacy, admin.**
@@ -756,7 +766,7 @@ graph TB
         S4[Records]
         S5[Messaging and notifications]
     end
-    DB[(PostgreSQL)]
+    DB[PostgreSQL]
     subgraph AI
         RAGS[RAG over approved knowledge]
         AGENTS[Tool-calling agent]
@@ -766,13 +776,22 @@ graph TB
     PU --> API
     DU --> API
     FU --> API
-    API --> AUTH --> Domain --> DB
+    API --> AUTH
+    AUTH --> S1
+    AUTH --> S2
+    AUTH --> S3
+    AUTH --> S4
+    S1 --> DB
+    S2 --> DB
+    S3 --> DB
+    S4 --> DB
     S1 --> S5
     S2 --> S5
     S3 --> S5
     API --> RAGS
     API --> AGENTS
-    AGENTS --> Domain
+    AGENTS --> S1
+    AGENTS --> S2
     RAGS --> DB
     RAGS --> EXT
     AGENTS --> EXT
@@ -958,14 +977,14 @@ graph TB
     subgraph Local["Local development"]
         LD[runserver on 8000]
         LS[streamlit on 8501]
-        LP[(Local PostgreSQL)]
+        LP[Local PostgreSQL]
         LD --- LP
         LS --> LD
     end
     subgraph Container["Docker Compose"]
         CA[API service - gunicorn]
         CU[Portal service - streamlit]
-        CP[(PostgreSQL service)]
+        CP[PostgreSQL service]
         CA --- CP
         CU --> CA
     end
@@ -1142,12 +1161,26 @@ Future work. None of the following is implemented today.
 
 ## License
 
-Roshada is released under the **MIT License**. You are free to use, copy,
-modify, merge, publish, distribute, sublicense and sell copies of the software,
-provided the copyright notice and permission notice are included. The software
-is provided "as is", without warranty of any kind.
+Roshada is **source-available, not open source**, under the Roshada
+Non-Commercial License. Copyright (c) 2026 Yousef Hossam.
 
-See [LICENSE](LICENSE) for the full text.
+The source code is public so that it can be read, studied and learned from.
+Publishing it grants no commercial right.
+
+**Permitted:** viewing and studying the source; personal, educational and
+non-commercial research use; modifying it for those purposes; sharing it free
+of charge with this license intact.
+
+**Not permitted without explicit written permission:** selling the software or
+modified versions, any commercial use, inclusion in a commercial product or
+service, use to provide a paid service, generating revenue from it,
+redistributing it as a paid product, commercial sublicensing, or commercial
+deployment.
+
+All commercial rights are reserved exclusively to Yousef Hossam. For
+commercial licensing, contact the copyright holder.
+
+See [LICENSE](LICENSE) for the full terms.
 
 ---
 

@@ -1,21 +1,184 @@
-MIT License
+Roshada Non-Commercial License
+Version 1.0
 
 Copyright (c) 2026 Yousef Hossam
+All rights reserved.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+PREAMBLE
+
+This software is source-available, not open source. The source code is
+published so that it may be read, studied and learned from. Publication of the
+source code does not grant any commercial right.
+
+The distinction is deliberate and is central to this license:
+
+  PUBLIC SOURCE CODE  - anyone may view, study and learn from this software,
+                        and may use and modify it for personal, educational and
+                        non-commercial research purposes.
+
+  COMMERCIAL RIGHTS   - reserved exclusively to Yousef Hossam ("the Licensor").
+                        No commercial right of any kind is granted by this
+                        license, by the public availability of the source code,
+                        or by any repository setting.
+
+
+1. DEFINITIONS
+
+1.1 "Software" means this software, its source code, documentation, assets and
+    any part of them, in original or modified form.
+
+1.2 "Licensor" means Yousef Hossam, the copyright holder.
+
+1.3 "You" means any individual or legal entity exercising the permissions
+    granted by this license.
+
+1.4 "Non-Commercial Use" means use that is not primarily intended for or
+    directed toward commercial advantage, monetary compensation, or the
+    generation of revenue, whether direct or indirect.
+
+1.5 "Commercial Use" means any use that is not Non-Commercial Use, including
+    without limitation the activities listed in Section 3.
+
+
+2. GRANT OF PERMISSION
+
+Subject to full compliance with this license, the Licensor grants You a
+worldwide, royalty-free, non-exclusive, non-transferable, revocable permission
+to:
+
+2.1 View and read the source code of the Software.
+
+2.2 Study the Software and its design, and learn from it.
+
+2.3 Use the Software for personal purposes.
+
+2.4 Use the Software for educational purposes, including teaching, coursework,
+    academic study and classroom demonstration.
+
+2.5 Use the Software for non-commercial research.
+
+2.6 Modify the Software, and create derivative works of it, for the purposes
+    permitted in Sections 2.3, 2.4 and 2.5.
+
+2.7 Share the Software or Your modifications with others free of charge, for
+    the purposes permitted in Sections 2.3, 2.4 and 2.5, provided that this
+    license and the copyright notice are included in full and unaltered, and
+    that no fee of any kind is charged.
+
+
+3. RESTRICTIONS
+
+Without the prior explicit written permission of the Licensor, You may NOT:
+
+3.1  Sell the Software.
+
+3.2  Sell modified or derivative versions of the Software.
+
+3.3  Use the Software, in whole or in part, for Commercial Use.
+
+3.4  Incorporate the Software into any commercial product or commercial
+     service.
+
+3.5  Use the Software to provide any paid service, whether the fee is charged
+     for the Software itself, for access to it, for hosting, for support, or
+     for anything of which the Software forms a part.
+
+3.6  Use the Software to generate revenue or profit, directly or indirectly.
+
+3.7  Redistribute the Software as a paid product, or as part of a paid product.
+
+3.8  Sublicense the Software commercially.
+
+3.9  Grant, purport to grant, or transfer commercial rights in the Software to
+     any other person or organization.
+
+3.10 Create a commercial derivative product or service based on the Software.
+
+3.11 Package the Software, or any modified version of it, and sell it.
+
+3.12 Deploy the Software commercially, or in support of any commercial
+     operation.
+
+3.13 Remove, obscure or alter this license, the copyright notice, or any
+     attribution contained in the Software.
+
+
+4. RESERVATION OF COMMERCIAL RIGHTS
+
+All commercial rights in the Software are reserved exclusively to the Licensor,
+Yousef Hossam.
+
+Nothing in this license, and nothing implied by the public availability of the
+Software or by the visibility settings of any repository hosting it, grants any
+commercial right.
+
+Any right not expressly granted in Section 2 is reserved.
+
+
+5. COMMERCIAL LICENSING
+
+Commercial use requires a separate written agreement with the Licensor.
+
+Any person or organization wishing to use the Software commercially must
+contact the Licensor and obtain explicit written permission before any such
+use begins. Permission is granted at the Licensor's sole discretion and only
+in writing. Silence, absence of response, or continued public availability of
+the Software does not constitute permission.
+
+
+6. NO TRADEMARK RIGHTS
+
+This license does not grant permission to use the name "Roshada", the name of
+the Licensor, or any associated logo, mark or branding, except as reasonably
+required to give attribution as permitted by Section 2.7.
+
+
+7. TERMINATION
+
+7.1 The permissions granted in Section 2 terminate automatically and
+    immediately, without notice, if You breach any term of this license.
+
+7.2 Upon termination You must cease all use of the Software and destroy all
+    copies of it in Your possession or control.
+
+7.3 The Licensor may additionally revoke the permissions granted in Section 2
+    at any time, at the Licensor's sole discretion.
+
+7.4 Sections 4, 6, 8, 9 and 10 survive termination.
+
+
+8. DISCLAIMER OF WARRANTY
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+FITNESS FOR A PARTICULAR PURPOSE, TITLE AND NONINFRINGEMENT.
+
+THE SOFTWARE IS NOT A MEDICAL DEVICE AND IS NOT INTENDED FOR CLINICAL USE,
+DIAGNOSIS OR TREATMENT. THE LICENSOR MAKES NO REPRESENTATION THAT THE SOFTWARE
+IS FIT FOR ANY HEALTHCARE PURPOSE OR COMPLIANT WITH ANY REGULATORY REQUIREMENT.
+
+
+9. LIMITATION OF LIABILITY
+
+IN NO EVENT SHALL THE LICENSOR BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+SOFTWARE, INCLUDING WITHOUT LIMITATION ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES.
+
+
+10. GENERAL
+
+10.1 If any provision of this license is held unenforceable, the remaining
+     provisions remain in full force and effect.
+
+10.2 Failure by the Licensor to enforce any provision is not a waiver of that
+     provision or of any other.
+
+10.3 This license is the entire agreement concerning the Software, and
+     supersedes any prior license under which the Software may previously have
+     been made available.
+
+
+For commercial licensing enquiries, contact the Licensor: Yousef Hossam.
