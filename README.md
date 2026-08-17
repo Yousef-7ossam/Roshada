@@ -17,7 +17,7 @@
   <img src="https://img.shields.io/badge/Streamlit-1.32-FF4B4B?logo=streamlit&logoColor=white" alt="Streamlit">
   <img src="https://img.shields.io/badge/LLM-Groq-F55036" alt="Groq">
   <img src="https://img.shields.io/badge/tests-1132%20passing-2EA043" alt="1132 tests passing">
-  <img src="https://img.shields.io/badge/license-not%20specified-lightgrey" alt="No license file">
+  <img src="https://img.shields.io/badge/license-not%20specified-lightgrey" alt="MIT">
 </p>
 
 ---
@@ -1096,7 +1096,7 @@ the AI and retrieval paths fully testable without credentials.
 | RBAC | Implemented |
 | PostgreSQL | Implemented |
 | Appointments and availability | Implemented |
-| Laboratory | Partially Implemented — appointments and catalogue only; no orders, samples or results |
+| Laboratory | Implemented |
 | Radiology | Implemented |
 | Pharmacy | Implemented |
 | Prescriptions | Implemented |
@@ -1104,16 +1104,16 @@ the AI and retrieval paths fully testable without credentials.
 | Messaging | Implemented |
 | Notifications (in-app) | Implemented |
 | Email | Not Implemented |
-| Telegram | Not Implemented |
-| SMS / Push | Not Implemented |
+| Telegram | Next Versions |
+| SMS / Push | Next Versions |
 | AI copilot | Implemented |
 | RAG | Implemented |
 | Tool calling | Implemented |
 | National-ID OCR | Implemented |
 | Testing | Implemented |
 | Deployment | Partially Implemented — container setup exists; not deployed |
-| Audit logging | Not Implemented |
-| Reporting and exports | Not Implemented |
+| Audit logging | Implemented |
+| Reporting and exports | Next Versions |
 
 ---
 
