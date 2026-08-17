@@ -1103,7 +1103,7 @@ the AI and retrieval paths fully testable without credentials.
 | Medical records | Implemented |
 | Messaging | Implemented |
 | Notifications (in-app) | Implemented |
-| Email | Not Implemented |
+| Email | Next Versions |
 | Telegram | Next Versions |
 | SMS / Push | Next Versions |
 | AI copilot | Implemented |
