@@ -660,6 +660,8 @@ Imperatives like "book it" are deliberately not treated as confirmation.
 PostgreSQL, through the Django ORM. Entities below are taken from the actual
 models.
 
+**Accounts, scheduling and the medical record**
+
 ```mermaid
 erDiagram
     USER ||--|| USERACCOUNT : "has role"
@@ -668,39 +670,41 @@ erDiagram
     USER ||--o| LABORATORYPROFILE : "laboratory"
     USER ||--o| RADIOLOGYPROFILE : "radiology"
     USER ||--o| PHARMACYPROFILE : "pharmacy"
-
     USER ||--o{ SERVICE : "offers"
     USER ||--o{ AVAILABILITYRULE : "publishes"
     USER ||--o{ TIMEOFF : "blocks"
-    USER ||--o{ APPOINTMENT : "books as patient"
-    USER ||--o{ APPOINTMENT : "hosts as provider"
+    USER ||--o{ APPOINTMENT : "books as patient or hosts as provider"
     SERVICE ||--o{ APPOINTMENT : "booked as"
+    USER ||--o| MEDICALRECORD : "registry for patient"
+```
 
-    USER ||--o{ PRESCRIPTION : "issues as doctor"
-    USER ||--o{ PRESCRIPTION : "receives as patient"
+**Prescriptions, pharmacy and imaging**
+
+```mermaid
+erDiagram
+    USER ||--o{ PRESCRIPTION : "issues as doctor or receives as patient"
     PRESCRIPTION ||--|{ PRESCRIPTIONITEM : contains
     MEDICATION ||--o{ PRESCRIPTIONITEM : "prescribed as"
     MEDICATION ||--o{ PHARMACYINVENTORY : "stocked as"
     USER ||--o{ PHARMACYINVENTORY : "held by pharmacy"
-    USER ||--o{ MEDICATIONREQUEST : "raised by patient"
-    USER ||--o{ MEDICATIONREQUEST : "filled by pharmacy"
+    USER ||--o{ MEDICATIONREQUEST : "raised by patient or filled by pharmacy"
     PRESCRIPTION ||--o{ MEDICATIONREQUEST : "requested from"
     MEDICATIONREQUEST ||--|{ MEDICATIONREQUESTITEM : contains
-
-    USER ||--o{ IMAGINGORDER : "ordered by doctor"
-    USER ||--o{ IMAGINGORDER : "for patient"
+    USER ||--o{ IMAGINGORDER : "ordered by doctor or for patient"
     IMAGINGORDER ||--o{ EXAMINATION : "fulfilled by"
     APPOINTMENT ||--o| EXAMINATION : "is"
     EXAMINATION ||--o{ IMAGINGFILE : "produces"
     EXAMINATION ||--o| RADIOLOGYREPORT : "reported in"
+```
 
-    USER ||--o| MEDICALRECORD : "registry for patient"
+**Communication, AI and the knowledge base**
+
+```mermaid
+erDiagram
     USER ||--o{ NOTIFICATION : receives
-    USER ||--o{ CONVERSATION : "patient side"
-    USER ||--o{ CONVERSATION : "doctor side"
+    USER ||--o{ CONVERSATION : "patient side or doctor side"
     CONVERSATION ||--|{ MESSAGE : contains
     USER ||--o{ CHATMESSAGE : "AI conversation"
-
     KNOWLEDGESOURCE ||--o{ DOCUMENT : publishes
     DOCUMENT ||--|{ DOCUMENTCHUNK : "chunked into"
 ```
