@@ -39,6 +39,7 @@
 - [Appointment architecture](#appointment-architecture)
 - [Notification architecture](#notification-architecture)
 - [AI copilot architecture](#ai-copilot-architecture)
+- [Detailed architecture](#detailed-architecture)
 - [RAG architecture](#rag-architecture)
 - [AI agent and tool calling](#ai-agent-and-tool-calling)
 - [Database architecture](#database-architecture)
@@ -103,23 +104,23 @@ connected, so the coordination work falls on the person least equipped to do it.
 One platform, one database, one set of shared services.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph People
-        PAT[Patient]
-        DOC[Doctor]
+        PAT["Patient"]
+        DOC["Doctor"]
     end
     subgraph Facilities
-        LAB[Laboratory]
-        RAD[Radiology centre]
-        PHA[Pharmacy]
+        LAB["Laboratory"]
+        RAD["Radiology centre"]
+        PHA["Pharmacy"]
     end
     subgraph Shared["Shared services"]
-        APPT[Appointments and availability]
-        REC[Unified medical record]
-        RX[Prescriptions and medication]
-        IMG[Imaging orders and reports]
-        NOTIF[Notifications]
-        AI[AI copilot]
+        APPT["Appointments and availability"]
+        REC["Unified medical record"]
+        RX["Prescriptions and medication"]
+        IMG["Imaging orders and reports"]
+        NOTIF["Notifications"]
+        AI["AI copilot"]
     end
 
     PAT --> APPT
@@ -226,35 +227,10 @@ tool for lab results says so explicitly rather than returning an empty list.
 
 ## Connected healthcare ecosystem
 
-Workflows that exist end to end in the code:
-
-```mermaid
-graph LR
-    D1[Doctor] -->|writes| P1[Prescription]
-    P1 -->|visible to| PH1[Pharmacy]
-    PH1 -->|inventory| AV1[Availability and price]
-    AV1 -->|search| PT1[Patient]
-    PT1 -->|medication request| PH1
-    PH1 -->|prepared / ready| PT1
-```
-
-```mermaid
-graph LR
-    D2[Doctor] -->|imaging order| RC[Radiology centre]
-    RC -->|examination| EX[Images captured]
-    EX -->|report drafted| RV[Verified]
-    RV -->|released| PT2[Patient]
-    RV -->|released| D2
-```
-
-```mermaid
-graph LR
-    PT3[Patient] -->|books| PR[Doctor / Laboratory / Radiology]
-    PR -->|availability rules| SL[Bookable slots]
-    SL -->|booking| AP[Appointment]
-    AP -->|appears in| MR[Medical record]
-    AP -->|event| NT[Notification]
-```
+Three workflows exist end to end in the code: a doctor's prescription
+reaching a pharmacy and then the patient; an imaging order becoming a
+released radiology report; and a patient booking any provider kind. Each is
+drawn in its own page under [Detailed architecture](#detailed-architecture).
 
 The laboratory result workflow is **not implemented**. A laboratory can be
 booked, but there is no path from a lab order to a released result.
@@ -274,32 +250,32 @@ the sidebar after signing in with the matching role.
 ## System architecture
 
 ```mermaid
-graph TB
-    U[Patient / Doctor / Laboratory / Radiology / Pharmacy / Admin]
-    UI[Streamlit portal]
-    API[Django REST API]
-    AUTH[Token authentication and RBAC]
+flowchart TB
+    U["Patient / Doctor / Laboratory / Radiology / Pharmacy / Admin"]
+    UI["Streamlit portal"]
+    API["Django REST API"]
+    AUTH["Token authentication and RBAC"]
 
     subgraph Services["Domain services"]
-        SCH[Scheduling and availability]
-        CARE[Care relationship]
-        PHARM[Pharmacy]
-        RADS[Radiology]
-        RECS[Medical record registry]
-        COMMS[Notifications and messaging]
-        KB[Knowledge base]
+        SCH["Scheduling and availability"]
+        CARE["Care relationship"]
+        PHARM["Pharmacy"]
+        RADS["Radiology"]
+        RECS["Medical record registry"]
+        COMMS["Notifications and messaging"]
+        KB["Knowledge base"]
     end
 
     subgraph AIL["AI layer"]
-        PIPE[Assistant pipeline]
-        GRND[Grounding router]
-        RAG[RAG service]
-        AGENT[Tool-calling agent]
-        LLM[LLM provider facade]
+        PIPE["Assistant pipeline"]
+        GRND["Grounding router"]
+        RAG["RAG service"]
+        AGENT["Tool-calling agent"]
+        LLM["LLM provider facade"]
     end
 
-    DB[PostgreSQL]
-    GROQ[Groq API]
+    DB["PostgreSQL"]
+    GROQ["Groq API"]
 
     U --> UI --> API --> AUTH
     AUTH --> SCH
@@ -336,45 +312,13 @@ Three properties are load-bearing:
 
 ## Patient architecture
 
-```mermaid
-graph TD
-    P[Patient]
-    P --> A[Appointments]
-    A --> AD[Doctor]
-    A --> AL[Laboratory]
-    A --> AR[Radiology centre]
-    P --> RR[Radiology reports - released only]
-    P --> RX[Prescriptions]
-    RX --> PS[Pharmacy availability search]
-    PS --> MR[Medication request]
-    P --> REC[Unified medical record]
-    P --> MSG[Messages with treating doctors]
-    P --> N[Notifications]
-    P --> AI[AI copilot]
-    AI --> KBQ[Approved knowledge base]
-    AI --> TOOLS[Own-record tools]
-```
+Diagram: [Patient workflow](docs/architecture/patient-workflow.md)
 
 ---
 
 ## Doctor architecture
 
-```mermaid
-graph TD
-    D[Doctor] --> AUTH[Authentication and role]
-    AUTH --> DASH[Dashboard]
-    DASH --> AVAIL[Availability rules, services, time off]
-    AVAIL --> SLOTS[Bookable slots]
-    DASH --> APPTS[Own appointments]
-    APPTS --> OUT["Outcome: completed / no-show"]
-    D --> CARE{Care relationship}
-    CARE -->|appointment exists| RX[Write prescription]
-    CARE -->|appointment exists| IMG[Raise imaging order]
-    CARE -->|appointment exists| REC[Read patient record]
-    CARE -->|appointment exists| MSG[Message patient]
-    D --> N[Notifications]
-    D --> AI[AI copilot with practice tools]
-```
+Diagram: [Doctor workflow](docs/architecture/doctor-workflow.md)
 
 A doctor reaches a patient's clinical data only when a **care relationship**
 exists — an appointment between the two. That one rule gates prescribing,
@@ -385,17 +329,7 @@ four cannot drift apart.
 
 ## Laboratory architecture
 
-```mermaid
-graph TD
-    L[Laboratory] --> SVC[Test catalogue]
-    SVC --> AV[Availability rules]
-    AV --> SL[Bookable slots]
-    SL --> AP[Patient appointment]
-    AP --> N[Notifications]
-    L -.not implemented.-> ORD[Lab orders]
-    ORD -.not implemented.-> SAM[Samples]
-    SAM -.not implemented.-> RES[Results to patient]
-```
+Diagram: [Laboratory workflow](docs/architecture/laboratory-workflow.md)
 
 Solid arrows are implemented. Dotted arrows are not built.
 
@@ -403,25 +337,7 @@ Solid arrows are implemented. Dotted arrows are not built.
 
 ## Radiology architecture
 
-```mermaid
-graph TD
-    R[Radiology centre] --> SVC[Imaging services and modalities]
-    SVC --> AV[Availability]
-    AV --> SL[Bookable slots]
-    D[Doctor] --> ORD[Imaging order]
-    ORD --> BK[Booked against an order]
-    SL --> BK
-    SL --> SELF[Patient self-booking]
-    BK --> EX[Examination]
-    SELF --> EX
-    EX --> ST[scheduled / checked in / in progress / completed]
-    EX --> FILES[Imaging files]
-    EX --> REP[Report]
-    REP --> RS[draft / pending review / verified / released]
-    RS -->|released only| PT[Patient]
-    RS -->|released only| D
-    RS --> N[Notification]
-```
+Diagram: [Radiology workflow](docs/architecture/radiology-workflow.md)
 
 A report is a clinical document only once released. Drafts notify nobody and are
 invisible to the patient.
@@ -430,20 +346,7 @@ invisible to the patient.
 
 ## Pharmacy architecture
 
-```mermaid
-graph TD
-    D[Doctor] --> RX[Prescription]
-    RX --> ITEMS[Prescription items and medications]
-    ITEMS --> CAT[Medication catalogue]
-    CAT --> INV["Per-pharmacy inventory: quantity, reserved, price"]
-    INV --> SEARCH[Availability search]
-    SEARCH --> PT[Patient]
-    PT --> REQ[Medication request]
-    REQ --> PH[Pharmacy]
-    PH --> FLOW[pending, confirmed, preparing, ready, completed]
-    FLOW --> N[Notification to patient]
-    PH -.rejected / cancelled.-> N
-```
+Diagram: [Pharmacy workflow](docs/architecture/pharmacy-workflow.md)
 
 Stock is reserved when a request is confirmed and released when it is cancelled,
 enforced by database constraints rather than by application checks alone.
@@ -455,20 +358,7 @@ enforced by database constraints rather than by application checks alone.
 One appointment model serves all three bookable provider kinds — doctor,
 laboratory and radiology centre.
 
-```mermaid
-graph TD
-    U[Patient] --> PICK[Choose provider]
-    PICK --> PR[Doctor / Laboratory / Radiology]
-    PR --> RULES[Availability rules and services]
-    RULES --> BLOCK[Time off and existing bookings]
-    BLOCK --> SLOTS[Bookable slots]
-    SLOTS --> BOOK[Booking request]
-    BOOK --> VALID[Slot re-validated inside the transaction]
-    VALID --> AP[Appointment]
-    AP --> ST[scheduled, cancelled, completed, no_show]
-    AP --> N[Notification to patient and provider]
-    AP --> REC[Medical record timeline]
-```
+Diagram: [Appointment workflow](docs/architecture/appointment-workflow.md)
 
 Whatever slots a client last saw, the slot is recomputed inside the booking
 transaction, and overlapping appointments for one provider are prevented by a
@@ -483,17 +373,7 @@ by the domain service that caused them, inside a savepoint so a failed
 notification can never roll back the clinical action that triggered it. There is
 no message queue and no background worker.
 
-```mermaid
-graph TD
-    EV["Domain event: booking, prescription, report release, request status"]
-    EV --> HOOK[Callback registry in the domain module]
-    HOOK --> SVC[Notification service]
-    SVC --> ROW[Notification row in PostgreSQL]
-    ROW --> INAPP[In-app notification centre]
-    SVC -.no backend registered.-> EMAIL[Email]
-    SVC -.no backend registered.-> PUSH[Push]
-    SVC -.no backend registered.-> SMS[SMS]
-```
+Diagram: [Notification architecture](docs/architecture/notification-architecture.md)
 
 **Channels.** In-app is the only delivery channel that exists. Email, push and
 SMS are *named* in the channel registry so a future integration is a single
@@ -507,16 +387,7 @@ task queue.
 
 ### Notification data flow
 
-```mermaid
-graph LR
-    A[Appointment booked / cancelled / rescheduled / completed] --> NS[Notification service]
-    B[Prescription issued or updated] --> NS
-    C[Radiology report released] --> NS
-    D[Medication request confirmed / preparing / ready / completed] --> NS
-    E[Message received] --> NS
-    NS --> IA[In-app notification centre]
-    IA --> U[Patient / Doctor / Facility]
-```
+Diagram: [Notification architecture](docs/architecture/notification-architecture.md)
 
 Twenty notification types are defined. `lab_result_released` is defined but has
 no producer, because the laboratory results pipeline is not built.
@@ -529,21 +400,21 @@ says a report was released, not what it says.
 ## AI copilot architecture
 
 ```mermaid
-graph TD
-    U[Patient or doctor] --> ASK["POST /api/chat/ask/"]
-    ASK --> EMG[Emergency pre-check - runs with no provider at all]
-    EMG --> ROUTE{General medical question?}
+flowchart TD
+    U["Patient or doctor"] --> ASK["POST /api/chat/ask/"]
+    ASK --> EMG["Emergency pre-check - runs with no provider at all"]
+    EMG --> ROUTE{"General medical question?"}
     ROUTE -->|yes| RAG["RAG service: retrieve, then answer"]
-    ROUTE -->|no| AG[Tool-calling agent]
-    AG --> TOOLS[Role-scoped tools]
-    TOOLS --> SERVICES[Domain services, as the authenticated user]
-    SERVICES --> DB[PostgreSQL]
-    RAG --> LLMF[LLM provider facade]
+    ROUTE -->|no| AG["Tool-calling agent"]
+    AG --> TOOLS["Role-scoped tools"]
+    TOOLS --> SERVICES["Domain services, as the authenticated user"]
+    SERVICES --> DB["PostgreSQL"]
+    RAG --> LLMF["LLM provider facade"]
     AG --> LLMF
-    LLMF --> PROV[Groq / OpenAI-compatible / Gemini / mock]
-    RAG --> VAL[Safety validation]
+    LLMF --> PROV["Groq / OpenAI-compatible / Gemini / mock"]
+    RAG --> VAL["Safety validation"]
     AG --> VAL
-    VAL --> REPLY[Reply, sources, tools used]
+    VAL --> REPLY["Reply, sources, tools used"]
 ```
 
 **The language model never reaches PostgreSQL.** It can request a named tool;
@@ -556,28 +427,30 @@ The provider is chosen by configuration. Swapping Groq for a local model is a
 
 ---
 
+## Detailed architecture
+
+The three diagrams above are the overview. Every other diagram lives in its own
+page, so this README stays quick to load and reliable to render.
+
+- [Patient workflow](docs/architecture/patient-workflow.md)
+- [Doctor workflow](docs/architecture/doctor-workflow.md)
+- [Laboratory workflow](docs/architecture/laboratory-workflow.md)
+- [Radiology workflow](docs/architecture/radiology-workflow.md)
+- [Pharmacy workflow](docs/architecture/pharmacy-workflow.md)
+- [Appointment workflow](docs/architecture/appointment-workflow.md)
+- [Notification architecture](docs/architecture/notification-architecture.md)
+- [RAG architecture](docs/architecture/rag-architecture.md)
+- [AI agent and tool calling](docs/architecture/ai-architecture.md)
+- [Database schema](docs/architecture/database-schema.md)
+- [Security architecture](docs/architecture/security-architecture.md)
+- [Healthcare data flow](docs/architecture/data-flow.md)
+- [Deployment architecture](docs/architecture/deployment-architecture.md)
+
+---
+
 ## RAG architecture
 
-```mermaid
-graph TD
-    SRC[Knowledge source] --> REVIEW{Administrator review}
-    REVIEW -->|approved only| DOC[Document]
-    DOC --> PARSE[Parse and clean]
-    PARSE --> CHUNK[Chunk with overlap]
-    CHUNK --> EMB[Embedding]
-    EMB --> STORE[Chunk and embedding in PostgreSQL]
-
-    Q[Question] --> PROC[Query processing and language detection]
-    PROC --> GATE["Retrieval gate: approved source, processed document, active version"]
-    GATE --> STORE
-    STORE --> HITS[Scored passages]
-    HITS --> CTX["Context builder: numbered, deduplicated, budgeted"]
-    CTX --> PROMPT[Versioned prompt]
-    PROMPT --> LLM[LLM facade]
-    LLM --> ANS[Answer]
-    ANS --> CITE[Citation verification]
-    CITE --> OUT[Grounded answer with sources]
-```
+Diagram: [RAG architecture](docs/architecture/rag-architecture.md)
 
 Verified properties:
 
@@ -606,20 +479,7 @@ Fourteen tools exist, scoped by role. Facility roles hold none.
 | Patient | `search_doctors`, `get_doctor_availability`, `search_availability`, `search_pharmacy_availability`, `get_patient_appointments`, `get_patient_prescriptions`, `get_patient_radiology_reports`, `get_patient_lab_results`, `book_appointment`, `cancel_appointment` |
 | Doctor | `get_doctor_appointments`, `get_doctor_schedule`, `search_doctor_patient_appointments`, `get_doctor_patients` |
 
-```mermaid
-sequenceDiagram
-    participant P as Patient
-    participant A as Assistant
-    participant X as Tool executor
-    participant S as Domain service
-    P->>A: Where is the medicine my doctor prescribed?
-    A->>X: get_patient_prescriptions
-    X->>X: Check role, inject authenticated user, drop unknown arguments
-    X->>S: patient_visible_prescriptions(user)
-    S-->>X: Real prescriptions
-    X-->>A: Result
-    A-->>P: Answer built from what the tool returned
-```
+Diagram: [Ai Architecture](docs/architecture/ai-architecture.md)
 
 **No tool schema contains an identifier for a person** — no `patient_id`, no
 `user_id`, no `username`. A patient cannot ask about another patient because the
@@ -631,21 +491,7 @@ patients they already treat, returning the same answer for "no such person" and
 
 Write tools are gated across two turns:
 
-```mermaid
-sequenceDiagram
-    participant P as Patient
-    participant A as Assistant
-    participant G as Confirmation gate
-    P->>A: Book me with a cardiologist tomorrow at 10
-    A->>G: book_appointment(...)
-    G-->>A: Nothing written. Proposal stored against this reply.
-    A-->>P: I can book 10:00 with Dr X. Shall I?
-    P->>A: Yes
-    A->>G: book_appointment(..., confirm=true)
-    G->>G: Does the stored proposal match, and did the person agree?
-    G-->>A: Allowed
-    A-->>P: Booked
-```
+Diagram: [Ai Architecture](docs/architecture/ai-architecture.md)
 
 The proposal must come from an **earlier** turn, so there is always a message
 from the person in between — and that message is what the gate reads. Agreement
@@ -662,52 +508,15 @@ models.
 
 **Accounts, scheduling and the medical record**
 
-```mermaid
-erDiagram
-    USER ||--|| USERACCOUNT : "has role"
-    USER ||--o| PATIENTPROFILE : "patient"
-    USER ||--o| DOCTOR : "doctor"
-    USER ||--o| LABORATORYPROFILE : "laboratory"
-    USER ||--o| RADIOLOGYPROFILE : "radiology"
-    USER ||--o| PHARMACYPROFILE : "pharmacy"
-    USER ||--o{ SERVICE : "offers"
-    USER ||--o{ AVAILABILITYRULE : "publishes"
-    USER ||--o{ TIMEOFF : "blocks"
-    USER ||--o{ APPOINTMENT : "books as patient or hosts as provider"
-    SERVICE ||--o{ APPOINTMENT : "booked as"
-    USER ||--o| MEDICALRECORD : "registry for patient"
-```
+Diagram: [Database schema](docs/architecture/database-schema.md)
 
 **Prescriptions, pharmacy and imaging**
 
-```mermaid
-erDiagram
-    USER ||--o{ PRESCRIPTION : "issues as doctor or receives as patient"
-    PRESCRIPTION ||--|{ PRESCRIPTIONITEM : contains
-    MEDICATION ||--o{ PRESCRIPTIONITEM : "prescribed as"
-    MEDICATION ||--o{ PHARMACYINVENTORY : "stocked as"
-    USER ||--o{ PHARMACYINVENTORY : "held by pharmacy"
-    USER ||--o{ MEDICATIONREQUEST : "raised by patient or filled by pharmacy"
-    PRESCRIPTION ||--o{ MEDICATIONREQUEST : "requested from"
-    MEDICATIONREQUEST ||--|{ MEDICATIONREQUESTITEM : contains
-    USER ||--o{ IMAGINGORDER : "ordered by doctor or for patient"
-    IMAGINGORDER ||--o{ EXAMINATION : "fulfilled by"
-    APPOINTMENT ||--o| EXAMINATION : "is"
-    EXAMINATION ||--o{ IMAGINGFILE : "produces"
-    EXAMINATION ||--o| RADIOLOGYREPORT : "reported in"
-```
+Diagram: [Database schema](docs/architecture/database-schema.md)
 
 **Communication, AI and the knowledge base**
 
-```mermaid
-erDiagram
-    USER ||--o{ NOTIFICATION : receives
-    USER ||--o{ CONVERSATION : "patient side or doctor side"
-    CONVERSATION ||--|{ MESSAGE : contains
-    USER ||--o{ CHATMESSAGE : "AI conversation"
-    KNOWLEDGESOURCE ||--o{ DOCUMENT : publishes
-    DOCUMENT ||--|{ DOCUMENTCHUNK : "chunked into"
-```
+Diagram: [Database schema](docs/architecture/database-schema.md)
 
 The relationships that matter most:
 
@@ -727,18 +536,7 @@ The relationships that matter most:
 
 ## Authentication and RBAC
 
-```mermaid
-graph TD
-    U[User] --> LOGIN[POST /api/login/]
-    LOGIN --> TOK[Expiring auth token]
-    TOK --> REQ[Authenticated request]
-    REQ --> ROLE[Role read from UserAccount]
-    ROLE --> CAP{Capability check}
-    CAP -->|allowed| SVC[Domain service]
-    CAP -->|refused| DENY[403]
-    SVC --> SCOPE["Scoped to the caller's own data"]
-    SCOPE --> DB[PostgreSQL]
-```
+Diagram: [Security architecture](docs/architecture/security-architecture.md)
 
 Six roles: **patient, doctor, laboratory, radiology, pharmacy, admin.**
 Administrators cannot be created through public signup.
@@ -754,52 +552,7 @@ because each one is a billable third-party call.
 
 ## Healthcare data flow
 
-```mermaid
-graph TB
-    subgraph Clients
-        PU[Patient portal]
-        DU[Doctor portal]
-        FU[Facility portals]
-    end
-    API[Django REST API]
-    AUTH[Token auth and RBAC]
-    subgraph Domain
-        S1[Scheduling]
-        S2[Pharmacy]
-        S3[Radiology]
-        S4[Records]
-        S5[Messaging and notifications]
-    end
-    DB[PostgreSQL]
-    subgraph AI
-        RAGS[RAG over approved knowledge]
-        AGENTS[Tool-calling agent]
-    end
-    EXT[Groq API]
-
-    PU --> API
-    DU --> API
-    FU --> API
-    API --> AUTH
-    AUTH --> S1
-    AUTH --> S2
-    AUTH --> S3
-    AUTH --> S4
-    S1 --> DB
-    S2 --> DB
-    S3 --> DB
-    S4 --> DB
-    S1 --> S5
-    S2 --> S5
-    S3 --> S5
-    API --> RAGS
-    API --> AGENTS
-    AGENTS --> S1
-    AGENTS --> S2
-    RAGS --> DB
-    RAGS --> EXT
-    AGENTS --> EXT
-```
+Diagram: [Healthcare data flow](docs/architecture/data-flow.md)
 
 The only outbound network dependency in normal operation is the configured LLM
 provider. Retrieval, embeddings and every clinical workflow run against the
@@ -976,26 +729,7 @@ server-side.
 Roshada is **not currently deployed anywhere**. What exists is a container setup
 and production-aware settings.
 
-```mermaid
-graph TB
-    subgraph Local["Local development"]
-        LD[runserver on 8000]
-        LS[streamlit on 8501]
-        LP[Local PostgreSQL]
-        LD --- LP
-        LS --> LD
-    end
-    subgraph Container["Docker Compose"]
-        CA[API service - gunicorn]
-        CU[Portal service - streamlit]
-        CP[PostgreSQL service]
-        CA --- CP
-        CU --> CA
-    end
-    EXT[Groq API]
-    LD --> EXT
-    CA --> EXT
-```
+Diagram: [Deployment architecture](docs/architecture/deployment-architecture.md)
 
 For a production deployment:
 
