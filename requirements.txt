@@ -1,0 +1,56 @@
+# ROSHDA — runtime dependencies
+# Install with:  pip install -r requirements.txt
+# (Dev/test tools live in requirements-dev.txt)
+
+# ---- Backend: Django REST API ----
+Django>=5.2,<5.3
+djangorestframework>=3.15
+gunicorn>=21.2            # production WSGI server (used by Docker)
+
+# ---- Config / secrets ----
+python-dotenv>=1.0
+
+# ---- Database: PostgreSQL driver ----
+psycopg2-binary>=2.9   # PostgreSQL adapter — required; there is no other backend
+
+# ---- Frontend: Streamlit ----
+streamlit>=1.32
+requests>=2.31
+# Imported directly for its Retry policy in the AI provider HTTP layer. It
+# arrives with requests anyway, but a direct import deserves a direct pin.
+urllib3>=2.0
+plotly>=5.20                    # dashboard charts
+# (streamlit-option-menu removed: the sidebar now uses native Streamlit buttons,
+#  which support grouped sections, tooltips, focus states and screen readers —
+#  none of which were possible inside the component's iframe.)
+
+# ---- AI assistant ----
+# No provider SDK is required. Every LLM provider is reached over its HTTP API
+# through appointments/services/ai/providers/, which shares one retry/timeout
+# policy via `requests` (already a dependency). This removed two packages:
+#   google-generativeai — end of life; it printed "All support for the
+#     google.generativeai package has ended" on import, and it pulled Streamlit
+#     into the provider layer via @st.cache_resource.
+#   openai — the SDK was used only for chat completions, which is one POST.
+# Groq is the configured provider (OpenAI-compatible wire format, so no extra
+# client is needed); a local model (Ollama / LM Studio / vLLM) is the
+# OpenAI-compatible adapter with OPENAI_BASE_URL pointed at it.
+
+# ---- Numerics ----
+# scikit-learn provides the HashingVectorizer behind the offline retrieval
+# embedder (appointments/services/rag/embeddings/hashing.py), which is what lets
+# the RAG pipeline run with no embedding credentials.
+numpy>=1.24
+scikit-learn>=1.3
+Pillow>=10.0
+
+# ---- OCR (National-ID extraction) ----
+opencv-python>=4.8
+pytesseract>=0.3.10
+ultralytics>=8.1
+arabic-reshaper>=3.0
+python-bidi>=0.4.2
+
+# ---- Optional: ONNX inference/export (only for the "onnx" model format) ----
+# onnxruntime>=1.17
+# skl2onnx>=1.16

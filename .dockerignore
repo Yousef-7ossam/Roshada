@@ -1,0 +1,34 @@
+.git
+.gitignore
+.venv
+venv
+.conda
+__pycache__
+*.pyc
+*.pyo
+.env
+.env.*
+!.env.example
+db.sqlite3
+# Fixtures containing real auth tokens and password hashes must never be baked
+# into an image — `COPY . .` would otherwise ship them to anyone who can pull it.
+data_dump.json
+logs/
+chat_history.jsonl
+*.jsonl
+runs/
+.vscode
+.idea
+# ~70 MB of documentation screenshots; nothing at runtime reads them.
+Roshada_UI/
+docs/
+tests/
+*.md
+# EXCEPT the prompt library: prompts are .md files that the application loads at
+# runtime, so excluding them would ship an image with no instructions to give
+# the model. Keep this negation directly below the `*.md` rule.
+!appointments/services/ai/prompts/library/*.md
+!appointments/services/ai/prompts/library/_fragments/*.md
+
+# Uploaded imaging files: patient medical images must never be baked into an image.
+media/

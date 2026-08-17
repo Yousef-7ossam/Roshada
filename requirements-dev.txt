@@ -1,0 +1,6 @@
+# ROSHDA — development & test dependencies
+# Install with:  pip install -r requirements.txt -r requirements-dev.txt
+
+pytest>=8.0
+pytest-django>=4.8
+pyflakes>=3.2

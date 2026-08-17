@@ -1,0 +1,23 @@
+# Roshada design system — premium healthcare light theme.
+# Base tokens live here; the full component styling is injected from shared/theme.py.
+[theme]
+base = "light"
+primaryColor = "#0EA98F"                 # brand teal
+backgroundColor = "#F4F7FB"              # app canvas
+secondaryBackgroundColor = "#FFFFFF"     # surfaces / cards / sidebar
+textColor = "#0F1B2D"                    # ink
+font = "sans serif"
+
+[client]
+showErrorDetails = false
+
+[server]
+maxUploadSize = 5
+
+[browser]
+# Off for two reasons. A platform that renders medical records should not be
+# reporting how it is used to a third party by default; and the fetch itself
+# was the only source of browser-console errors in this app — it times out
+# wherever outbound network is restricted, which made a clean console
+# impossible to assert.
+gatherUsageStats = false

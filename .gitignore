@@ -1,0 +1,79 @@
+# .gitignore has no inline-comment syntax — a trailing "# ..." becomes part of
+# the pattern and silently disables it. Keep comments on their own lines.
+
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ---- Virtual environments ----
+venv/
+.venv/
+env/
+.conda/
+
+# ---- Secrets and environment ----
+# Real credentials never enter the repository; .env.example carries the
+# placeholders instead.
+.env
+.env.*
+!.env.example
+
+# ---- Databases ----
+# PostgreSQL is the only supported backend. These patterns exist so a stray
+# SQLite file from a tool or tutorial can never be committed by accident.
+*.sqlite3
+*.sqlite
+*.db
+db.sqlite3
+# SQLite -> Postgres data export: contains users, password hashes and auth
+# tokens.
+data_dump.json
+
+# ---- Sensitive runtime data ----
+# Chat history is per-user medical questions and lives in PostgreSQL. Any
+# JSONL on disk is either an export or a leftover of the shared-file store
+# that leaked every user's questions to every other user.
+chat_history.jsonl
+*.jsonl
+# Uploaded imaging files and ingested documents: patient medical content.
+media/
+
+# ---- Logs and temporary artifacts ----
+*.log
+logs/
+temp_*
+runs/
+
+# ---- Machine-learning artifacts ----
+# Model binaries do not belong in Git. Nothing in the application loads one
+# today; if a model is reintroduced, publish the weights as a release asset and
+# fetch them at setup rather than committing them.
+*.pkl
+*.joblib
+*.sav
+*.h5
+*.pt
+*.onnx
+
+# ---- Design source material ----
+# High-resolution mockups (~70 MB). They are design references cited in code
+# comments, not something the application reads.
+Roshada_UI/
+
+# ---- Frontend build output ----
+node_modules/
+dist/
+build/
+
+# ---- Editors and operating systems ----
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+desktop.ini
