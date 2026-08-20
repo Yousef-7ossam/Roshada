@@ -25,11 +25,7 @@ env/
 
 # ---- Databases ----
 # PostgreSQL is the only supported backend. These patterns exist so a stray
-# SQLite file from a tool or tutorial can never be committed by accident.
-*.sqlite3
-*.sqlite
-*.db
-db.sqlite3
+
 # SQLite -> Postgres data export: contains users, password hashes and auth
 # tokens.
 data_dump.json
