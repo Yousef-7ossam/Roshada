@@ -26,7 +26,7 @@ env/
 # ---- Databases ----
 # PostgreSQL is the only supported backend. These patterns exist so a stray
 
-# SQLite -> Postgres data export: contains users, password hashes and auth
+# Postgres data export: contains users, password hashes and auth
 # tokens.
 data_dump.json
 
